@@ -9,6 +9,91 @@ namespace BlackJackCS
         public string Suit { get; set; }
         public string Rank { get; set; }
 
+        public int Value()
+        {
+            int answer = 0;
+
+            switch (Rank)
+            {
+                case "Two":
+                    answer = 2;
+                    break;
+
+                case "Three":
+                    answer = 3;
+                    break;
+
+                case "Four":
+                    answer = 4;
+                    break;
+
+                case "Five":
+                    answer = 5;
+                    break;
+
+                case "Six":
+                    answer = 6;
+                    break;
+
+                case "Seven":
+                    answer = 7;
+                    break;
+
+                case "Eight":
+                    answer = 8;
+                    break;
+
+                case "Nine":
+                    answer = 9;
+                    break;
+
+                case "Ten":
+                    answer = 10;
+                    break;
+
+                case "Jack":
+                    answer = 10;
+                    break;
+
+                case "Queen":
+                    answer = 10;
+                    break;
+
+                case "King":
+                    answer = 10;
+                    break;
+
+                case "Ace":
+                    answer = 11;
+                    break;
+
+            }
+
+            return answer;
+
+            // Two = 2
+            // Three = 3
+            // Four = 4
+            // Five = 5
+            // Six = 6
+            // Seven = 7
+            // Eight = 8
+            // Nine = 9
+            // Ten = 10 
+            // Jack = 10
+            // Queen = 10
+            // King = 10
+            // Ace = 11
+        }
+    }
+    class Hands
+    {
+        public List<Cards> Card = new List<Cards>();
+
+        public void AddCardToHand(Cards cardAddedToHand)
+        {
+            Card.Add(cardAddedToHand);
+        }
     }
     class Program
     {
@@ -77,29 +162,74 @@ namespace BlackJackCS
             }
 
             var dealtCard = deck[0];
-            Console.WriteLine($"{dealtCard.Rank} of {dealtCard.Suit}");
 
 
-            // Match the cards to values.
-            // Two = 2
-            // Three = 3
-            // Four = 4
-            // Five = 5
-            // Six = 6
-            // Seven = 7
-            // Eight = 8
-            // Nine = 9
-            // Ten = 10 
-            // Jack = 10
-            // Queen = 10
-            // King = 10
-            // Ace = 11
+
+
             // Dealing two cards.
-            // Keeping each card in Player hand.
-            // Keeping each card in Dealer hand.
-            // Keep Dealer cards hidden until the game is complete.
-            // Show player cards to player.
+            // Make the Player hand.
+            var playerHand = new Hands();
+
+            // Make the Dealer hand.
+            var dealerHand = new Hands();
+
+            // Take the first card from the deck.
+            var playerFirstCard = deck[0];
+
+            // Take card card out of the deck.
+            deck.Remove(playerFirstCard);
+
+            // Add card to the hand.
+
+            playerHand.AddCardToHand(playerFirstCard);
+
+            // Repeat for the second card and the dealer
+            var playerSecondCard = deck[0];
+            deck.Remove(playerSecondCard);
+            playerHand.AddCardToHand(playerSecondCard);
+
+            var dealerFirstCard = deck[0];
+            deck.Remove(dealerFirstCard);
+            dealerHand.AddCardToHand(dealerFirstCard);
+
+            var dealerSecondCard = deck[0];
+            deck.Remove(dealerSecondCard);
+            dealerHand.AddCardToHand(dealerSecondCard);
+
+            // Show player cards. DO NOT SHOW DEALER CARDS!
+            // Create values for the cards
+            var total = 0;
+            foreach (var card in playerHand.Card)
+            {
+                Console.WriteLine($"You have the {card.Rank} of {card.Suit}.");
+
+                // Match the cards to values.
+                total = total + card.Value();
+            }
+            Console.WriteLine($"You have a total of {total}.");
+
+            var additionalCard = deck[0];
+            deck.Remove(additionalCard);
+            playerHand.AddCardToHand(additionalCard);
+
+
+            while (total != 21)
+            {
+                Console.Write("HIT or STAND? ");
+                var playerResponse = Console.ReadLine().ToUpper();
+
+                if (playerResponse == "HIT")
+                {
+                    Console.WriteLine($"You now have a ");
+                }
+
+                if (playerResponse == "STAND")
+                {
+                    dealerHand.AddCardToHand(additionalCard);
+                }
+            }
             // Ask play if the want to hit or stand.
+
             // If player hit, add another card to hand.
             // Else stand.
             // If stand, Dealer reveals hand and hits until 17 or more.
