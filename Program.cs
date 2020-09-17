@@ -90,9 +90,22 @@ namespace BlackJackCS
     {
         public List<Cards> Card = new List<Cards>();
 
+
         public void AddCardToHand(Cards cardAddedToHand)
         {
             Card.Add(cardAddedToHand);
+        }
+
+
+        public int HandValue()
+        {
+            var total = 0;
+            foreach (var card in Card)
+            {
+                total = total + card.Value();
+            }
+
+            return total;
         }
     }
     class Program
@@ -198,49 +211,92 @@ namespace BlackJackCS
 
             // Show player cards. DO NOT SHOW DEALER CARDS!
             // Create values for the cards
-            var total = 0;
-            foreach (var card in playerHand.Card)
-            {
-                Console.WriteLine($"You have the {card.Rank} of {card.Suit}.");
-
-                // Match the cards to values.
-                total = total + card.Value();
-            }
-            Console.WriteLine($"You have a total of {total}.");
-
             var additionalCard = deck[0];
-            deck.Remove(additionalCard);
-            playerHand.AddCardToHand(additionalCard);
 
 
-            while (total != 21)
+            var playersChoice = "";
+
+
+            while (playersChoice != "STAND" && playerHand.HandValue() < 21)
             {
-                Console.Write("HIT or STAND? ");
-                var playerResponse = Console.ReadLine().ToUpper();
 
-                if (playerResponse == "HIT")
+                var total = 0;
+
+                foreach (var card in playerHand.Card)
                 {
-                    Console.WriteLine($"You now have a ");
+                    Console.WriteLine($"You have the {card.Rank} of {card.Suit}.");
+
+                    // Match the cards to values.
+                    total = total + card.Value();
                 }
 
-                if (playerResponse == "STAND")
+                Console.WriteLine($"You have a total of {total}.");
+
+                Console.Write("HIT OR STAND?  ");
+                playersChoice = Console.ReadLine().ToUpper();
+
+                if (playersChoice == "HIT")
                 {
-                    dealerHand.AddCardToHand(additionalCard);
+                    deck.Remove(additionalCard);
+                    playerHand.AddCardToHand(additionalCard);
+
+                }
+                if (playerHand.HandValue() > 21)
+                {
+                    Console.WriteLine("BUST! DEALER WINS!! 💸💸");
+                    Console.WriteLine("");
+                    Console.WriteLine("");
                 }
             }
-            // Ask play if the want to hit or stand.
+            if (playerHand.HandValue() == 21)
+            {
+                Console.WriteLine("BLACKJACK!! YOU WIN!!!! 🎉🎉🎉🎉");
+            }
+            while (playersChoice == "STAND" && dealerHand.HandValue() <= 21)
+            {
 
-            // If player hit, add another card to hand.
-            // Else stand.
-            // If stand, Dealer reveals hand and hits until 17 or more.
-            // If Dealer goes over 21, then Dealer loses.
-            // If Player goes over 21, Bust and Dealer Wins.
-            // If neither values are over 21, then whoever closest to 21 is the winner.
-            // If values are the same then the ties go to the dealer.
-            // Ask if player, they want to play again, if yes, begin again with new deck of cards. If not, quit app and say goodbye.
+                deck.Remove(additionalCard);
+                dealerHand.AddCardToHand(additionalCard);
 
+                if (dealerHand.HandValue() < playerHand.HandValue())
+                {
+                    Console.WriteLine($"Dealers total is {dealerHand.HandValue()}");
+                    Console.WriteLine("DEALER WINS!! 💸💸");
+                }
 
+                if (dealerHand.HandValue() > playerHand.HandValue())
+                {
+                    Console.WriteLine($"Dealers total is {dealerHand.HandValue()}");
+                    Console.WriteLine("YOU BEAT THE DEALER! YOU WIN!! 🎉🎉");
+                }
+
+                if (dealerHand.HandValue() == 21)
+                {
+                    Console.WriteLine($"Dealers total is {dealerHand.HandValue()}");
+                    Console.WriteLine("DEALER GOT BLACKJACK! DEALER WINS!! 💸💸");
+                }
+            }
+
+            if (dealerHand.HandValue() > 21)
+            {
+                Console.WriteLine($"Dealers total is {dealerHand.HandValue()}");
+                Console.WriteLine("DEALER BUSTED! YOU WIN!! 🎉🎉");
+            }
 
         }
+        // Ask play if the want to hit or stand.
+
+        // If player hit, add another card to hand.
+        // Else stand.
+        // If stand, Dealer reveals hand and hits until 17 or more.
+        // If Dealer goes over 21, then Dealer loses.
+        // If Player goes over 21, Bust and Dealer Wins.
+        // If neither values are over 21, then whoever closest to 21 is the winner.
+        // If values are the same then the ties go to the dealer.
+        // Ask if player, they want to play again, if yes, begin again with new deck of cards. If not, quit app and say goodbye.
+
+
+
     }
 }
+
